@@ -7,7 +7,6 @@ namespace RealTimeWeatherMonitoring
 {
     class RealTimeWeatherMonitoring
     {
-        
         public static void Main()
         {
             var realProject = new RealTimeWeatherMonitoring();
