@@ -2,20 +2,22 @@
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Reflection.Metadata.Ecma335;
 
 namespace RealTimeWeatherMonitoring
 {
     class RealTimeWeatherMonitoring
     {
+        private static RealTimeWeatherMonitoring realProject= new RealTimeWeatherMonitoring();
+        private static DataFormateFactory dataFormateFactory=new DataFormateFactory();
         public static void Main()
         {
-            var realProject = new RealTimeWeatherMonitoring();
             var weatherStation = new WeatherStation();
 
             new BotFactory().CreatBots();
             realProject.SubscribeBot(ref weatherStation);
             realProject.HellowMassge();
-            Thread.Sleep(1000);
+            realProject.PreesAnyKey();
             while (true)
             {
                 var choice=realProject.GetChoice();
@@ -24,7 +26,11 @@ namespace RealTimeWeatherMonitoring
                 switch (choice)
                 {
                     case 1:
-                        realProject.UpdateWeatherData(ref realProject,ref weatherStation);
+                        var Data = (string)(null);
+                        var weatherData = realProject.GetWeatherData(Data);
+
+                        Data = realProject.UserInput();
+                        realProject.UpdateWeatherData(weatherData,Data,ref weatherStation);
                         break;
                     case 2:
                         Console.WriteLine("Exiting program...");
@@ -35,19 +41,23 @@ namespace RealTimeWeatherMonitoring
                 }
             }
         }
-        public void UpdateWeatherData(ref RealTimeWeatherMonitoring realProject, ref WeatherStation weatherStation)
+        public void UpdateWeatherData(WeatherData weatherData,string Data,ref WeatherStation weatherStation)
         {
-            var Data = (string)(null);
-            var weatherData = new WeatherData();
-
-            Data =realProject.UserInput();
-            weatherData = realProject.GetWeatherData(Data);
-            if (weatherData == null)
+            if (CheackWeatherData(weatherData))
             {
                 realProject.WrongDataFormatteMassge();
+                return;
             }
             weatherStation.UpdateWeatherData(weatherData);
             realProject.PreesAnyKey();
+        }
+        public bool CheackWeatherData(WeatherData weatherData)
+        {
+            if (weatherData is null)
+            {
+                return false;
+            }
+            return true;
         }
         public string? UserInput()
         {
@@ -85,7 +95,7 @@ namespace RealTimeWeatherMonitoring
         public void WrongDataFormatteMassge()
         {
             Console.WriteLine("Wrong Data input");
-            Thread.Sleep(1000);
+            PreesAnyKey();
         }
         public void PreesAnyKey()
         {
@@ -96,7 +106,7 @@ namespace RealTimeWeatherMonitoring
         {
             try
             {
-                var dataObject = new DataFormateFactory().CreateDataFormate(Data).GetDocument(Data);
+                var dataObject = dataFormateFactory.CreateDataFormate(Data).GetDocument(Data);
 
                 if (dataObject.GetType() == typeof(JsonDocument))
                 {
@@ -118,7 +128,7 @@ namespace RealTimeWeatherMonitoring
                 }
                 return null;
             }
-            catch (Exception? ex)
+            catch (FormatException? ex)
             {
                 Console.WriteLine($"Invalid data format {ex.Message}");
                 return null;
