@@ -1,20 +1,32 @@
 ﻿using AutoFixture;
+using Moq;
 
 namespace RealTimeWeatherMonitoring.Test
 {
     [TestClass]
     public class SnowBotTest
     {
+        private Fixture fixture;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            fixture = new Fixture();
+        }
         [TestMethod]
         public void Test_Update_Method()
         {
-            //Arange
+            //Arang
             var snowBot = SnowBot.GetSnowBot();
-            var fixture = new Fixture();
             var weatherData = fixture.Create<WeatherData>();
+            var mockBehavior = new Mock<IBotBehavior>();
             //Act
+            mockBehavior.Setup(m => m.Execute(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<WeatherData>())).Verifiable("Execute was never invoked");
+            snowBot.behavior = mockBehavior.Object;
+            snowBot.Enabled = true;
             //Assert
             snowBot.Update(weatherData);
+            mockBehavior.VerifyAll();
         }
         [TestMethod]
         public void Test_GetSnowBot_Returns_Instance()

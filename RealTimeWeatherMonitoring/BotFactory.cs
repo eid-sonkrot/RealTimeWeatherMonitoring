@@ -5,7 +5,7 @@ namespace RealTimeWeatherMonitoring
     public class BotFactory : IBotFactory
     {
         private JsonDocument appConfig;
-        private const string JsonPath = "C:\\Users\\Smile\\source\\repos\\RealProject\\RealProject\\Configuration.json";
+        private string JsonPath = Path.Combine(Directory.GetCurrentDirectory(),"Configuration.json");
 
         public BotFactory()
         {

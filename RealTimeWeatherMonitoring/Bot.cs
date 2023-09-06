@@ -2,7 +2,7 @@
 {
     public abstract class Bot : IObserver
     {
-        protected IBotBehavior? behavior;
+        public IBotBehavior? behavior { set; get; }
         public string Message { set; get; }
         public double Threshold { set; get; }
         public bool Enabled { set; get; }

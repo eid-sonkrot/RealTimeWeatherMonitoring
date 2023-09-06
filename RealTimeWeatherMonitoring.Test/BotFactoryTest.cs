@@ -1,51 +1,74 @@
-﻿namespace RealTimeWeatherMonitoring.Test
+﻿using AutoFixture;
+
+namespace RealTimeWeatherMonitoring.Test
 {
     [TestClass]
     public class BotFactoryTest
     {
-        [TestMethod]
-        public void Test_BotFactory()
+        private Fixture fixture;
+        private BotFactory factory;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            // Arrange
-            // Act
-            // Assert
-            var factory = new BotFactory();
+            fixture = new Fixture();
+            factory = new BotFactory();
         }
         [TestMethod]
         public void Test_CreatSunBot()
         {
             // Arrange
-            var factory = new BotFactory();
+            var type = typeof(SunBot);
             // Act
-            // Assert
             factory.CreatSunBot();
+            var bot=SunBot.GetSunBot();
+            // Assert
+            Assert.IsNotNull(bot);
+            Assert.IsInstanceOfType(bot,type);
         }
         [TestMethod]
         public void Test_CreatSnowBot()
         {
             // Arrange
-            var factory = new BotFactory();
+            var type = typeof(SnowBot);
             // Act
-            // Assert
             factory.CreatSnowBot();
+            var bot = SnowBot.GetSnowBot();
+            // Assert
+            Assert.IsNotNull(bot);
+            Assert.IsInstanceOfType(bot, type);
         }
         [TestMethod]
         public void Test_CreatRainBot()
         {
             // Arrange
-            var factory = new BotFactory();
+            var type = typeof(RainBot);
             // Act
-            // Assert
             factory.CreatRainBot();
+            var bot = RainBot.GetRainBot();
+            // Assert
+            Assert.IsNotNull(bot);
+            Assert.IsInstanceOfType(bot, type);
         }
         [TestMethod]
         public void Test_CreatBots()
         {
             // Arrange
-            var factory = new BotFactory();
+            var snowType = typeof(SnowBot);
+            var rainType = typeof(RainBot);
+            var sunType = typeof(SunBot);
             // Act
-            // Assert
             factory.CreatBots();
+            var rainBot = RainBot.GetRainBot();
+            var snowBot = SnowBot.GetSnowBot();
+            var sunBot = SunBot.GetSunBot();
+            // Assert
+            Assert.IsNotNull(sunBot);
+            Assert.IsNotNull(snowBot);
+            Assert.IsNotNull(rainBot);
+            Assert.IsInstanceOfType(sunBot, sunType);
+            Assert.IsInstanceOfType(rainBot, rainType);
+            Assert.IsInstanceOfType(snowBot, snowType);
         }
     }
 }
