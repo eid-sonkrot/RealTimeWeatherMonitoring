@@ -1,6 +1,5 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace RealTimeWeatherMonitoring
 {
@@ -14,15 +13,11 @@ namespace RealTimeWeatherMonitoring
         }
         public static XmlFormate GetXmlFormate()
         {
-            if (xmlFormate == null)
+            if (xmlFormate is null)
             {
                 xmlFormate = new XmlFormate();
-                return xmlFormate;
             }
-            else
-            {
-                return xmlFormate;
-            }
+            return xmlFormate;
         }
         public bool IsRightFormate(string Data)
         {
@@ -38,22 +33,15 @@ namespace RealTimeWeatherMonitoring
         }
         public object GetDocument(string Data)
         {
-            if (IsRightFormate(Data))
-            {
-                if (xmlDoc is not null)
-                {
-                    return xmlDoc;
-                }
-                else
-                {
-                    throw new NullReferenceException("Document object is null");
-                }
-            }
-            else
+            if (!IsRightFormate(Data))
             {
                 throw new FormatException("Invalid data format");
             }
+            if (xmlDoc is null)
+            {
+                throw new NullReferenceException("Document object is null");
+            }
+            return xmlDoc;
         }
-
     }
 }

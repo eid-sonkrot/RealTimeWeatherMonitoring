@@ -12,15 +12,11 @@ namespace RealTimeWeatherMonitoring
         }
         public static JsonFormate GetJsonFormate()
         {
-            if (jsonFormate == null)
+            if (jsonFormate is null)
             {
                 jsonFormate = new JsonFormate();
-                return jsonFormate;
             }
-            else
-            {
-                return jsonFormate;
-            }
+            return jsonFormate;  
         }
         public bool IsRightFormate(string Data)
         {
@@ -36,22 +32,15 @@ namespace RealTimeWeatherMonitoring
         }
         public object GetDocument(string Data)
         {
-            if (IsRightFormate(Data))
-            {
-                if (jsonDoc is not null)
-                {
-                    return jsonDoc;
-                }
-                else
-                {
-                    throw new NullReferenceException("Document object is null");
-                }
-            }
-            else
+            if (!IsRightFormate(Data))
             {
                 throw new FormatException("Invalid data format");
             }
+            if (jsonDoc is null)
+            {
+                throw new NullReferenceException("Document object is null");
+            }
+            return jsonDoc;
         }
     }
-
 }
